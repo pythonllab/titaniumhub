@@ -1,0 +1,2 @@
+Please wait
+Sending request to server . . . 
