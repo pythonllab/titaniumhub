@@ -79,7 +79,7 @@ if syn then
     })
 
     if content.StatusCode ~= 200 then
-        loadgive.Text = "Website is offline"
+        loadgive.Text = tostring("Failed "..content.StatusCode)
         loadstatus.BackgroundColor3 = Color3.new(255, 0, 0)
         loadstatus:TweenSize(UDim2.new(0, 316, 0, 10), Enum.EasingDirection.Out, Enum.EasingStyle.Sine, 0.5)
         cancelloadbutton.Text = "OK"
@@ -88,7 +88,14 @@ if syn then
     loadgive.Text = "Welcome"
     loadstatus:TweenSize(UDim2.new(0, 316, 0, 10), Enum.EasingDirection.Out, Enum.EasingStyle.Sine, 0.25)
     cancelloadbutton:Destroy()
-    wait(1.25)
+    wait(1)
+    loadingframe:Destroy()
+else
+    loadgive.Text = "Welcome. Functions are limited."
+    loadstatus.BackgroundColor3 = Color3.new(255, 85, 0)
+    loadstatus:TweenSize(UDim2.new(0, 316, 0, 10), Enum.EasingDirection.Out, Enum.EasingStyle.Sine, 0.5)
+    cancelloadbutton:Destroy()
+    wait(2)
     loadingframe:Destroy()
 end
 
@@ -133,12 +140,51 @@ end)
 
 mainframe.Name = "mainframe"
 mainframe.Parent = titanium
-mainframe.Active = true
 mainframe.BackgroundColor3 = Color3.new(0.196078, 0.196078, 0.196078)
 mainframe.Position = UDim2.new(0.323151112, 0, 0.319702595, 0)
 mainframe.Selectable = true
 mainframe.Size = UDim2.new(0, 440, 0, 290)
-mainframe.Draggable = true
+
+function dragify(Frame)
+    dragToggle = nil
+    dragSpeed = .25 -- You can edit this.
+    dragInput = nil
+    dragStart = nil
+    dragPos = nil
+    
+    function updateInput(input)
+    Delta = input.Position - dragStart
+    Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + Delta.X, startPos.Y.Scale, startPos.Y.Offset + Delta.Y)
+    game:GetService("TweenService"):Create(Frame, TweenInfo.new(.25), {Position = Position}):Play()
+    end
+    
+    Frame.InputBegan:Connect(function(input)
+    if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
+    dragToggle = true
+    dragStart = input.Position
+    startPos = Frame.Position
+    input.Changed:Connect(function()
+    if (input.UserInputState == Enum.UserInputState.End) then
+    dragToggle = false
+    end
+    end)
+    end
+    end)
+    
+    Frame.InputChanged:Connect(function(input)
+    if (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+    dragInput = input
+    end
+    end)
+    
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if (input == dragInput and dragToggle) then
+    updateInput(input)
+    end
+    end)
+end
+
+dragify(mainframe)
 
 close.Name = "close"
 close.Parent = mainframe
@@ -203,6 +249,189 @@ minround.Name = "minround"
 minround.Parent = min
 minround.CornerRadius = UDim.new(0, 12)
 
+local menuhub = Instance.new("Frame")
+local menuhomenav = Instance.new("TextButton")
+local menuhomenavround = Instance.new("UICorner")
+local menuround = Instance.new("UICorner")
+local menusettingsnav = Instance.new("TextButton")
+local menusettingsnavround = Instance.new("UICorner")
+local menuaboutnav = Instance.new("TextButton")
+local menuaboutnavround = Instance.new("UICorner")
+local devtoolsnav = Instance.new("TextButton")
+local motd = Instance.new("TextLabel")
+
+menuhub.Name = "menuhub"
+menuhub.Parent = mainframe
+menuhub.BackgroundColor3 = Color3.new(0.231373, 0.231373, 0.231373)
+menuhub.BackgroundTransparency = 0.019999999552965164
+menuhub.BorderSizePixel = 0
+menuhub.Position = UDim2.new(0.0227272734, 0, 0.113793105, 0)
+menuhub.Size = UDim2.new(0, 144, 0, 212)
+menuhub.ZIndex = 2
+menuhub.Visible = false
+
+menuhomenav.Name = "menuhomenav"
+menuhomenav.Parent = menuhub
+menuhomenav.BackgroundColor3 = Color3.new(0, 0, 255)
+menuhomenav.Position = UDim2.new(0.0742857158, 0, 0.0830365643, 0)
+menuhomenav.Size = UDim2.new(0, 120, 0, 28)
+menuhomenav.Font = Enum.Font.Ubuntu
+menuhomenav.Text = "Home"
+menuhomenav.TextColor3 = Color3.new(1, 1, 1)
+menuhomenav.TextScaled = true
+menuhomenav.TextSize = 14
+menuhomenav.TextWrapped = true
+menuhomenav.ZIndex = 2
+
+menuhomenavround.Name = "menuhomenavround"
+menuhomenavround.Parent = menuhomenav
+
+menuround.Name = "menuround"
+menuround.Parent = menuhub
+
+menusettingsnav.Name = "menusettingsnav"
+menusettingsnav.Parent = menuhub
+menusettingsnav.BackgroundColor3 = Color3.new(0.27451, 0.27451, 0.27451)
+menusettingsnav.Position = UDim2.new(0.0742857158, 0, 0.246588841, 0)
+menusettingsnav.Size = UDim2.new(0, 120, 0, 28)
+menusettingsnav.Font = Enum.Font.Ubuntu
+menusettingsnav.Text = "Settings"
+menusettingsnav.TextColor3 = Color3.new(1, 1, 1)
+menusettingsnav.TextScaled = true
+menusettingsnav.TextSize = 14
+menusettingsnav.TextWrapped = true
+menusettingsnav.ZIndex = 2
+
+menusettingsnavround.Name = "menusettingsnavround"
+menusettingsnavround.Parent = menusettingsnav
+
+menuaboutnav.Name = "menuaboutnav"
+menuaboutnav.Parent = menuhub
+menuaboutnav.BackgroundColor3 = Color3.new(0.27451, 0.27451, 0.27451)
+menuaboutnav.Position = UDim2.new(0.0742857158, 0, 0.405605525, 0)
+menuaboutnav.Size = UDim2.new(0, 120, 0, 28)
+menuaboutnav.Font = Enum.Font.Ubuntu
+menuaboutnav.Text = "About"
+menuaboutnav.TextColor3 = Color3.new(1, 1, 1)
+menuaboutnav.TextScaled = true
+menuaboutnav.TextSize = 14
+menuaboutnav.TextWrapped = true
+menuaboutnav.ZIndex = 2
+
+menuaboutnavround.Name = "menuaboutnavround"
+menuaboutnavround.Parent = menuaboutnav
+
+devtoolsnav.Name = "devtoolsnav"
+devtoolsnav.Parent = menuhub
+devtoolsnav.BackgroundColor3 = Color3.new(0.282353, 0.282353, 0.282353)
+devtoolsnav.BorderSizePixel = 0
+devtoolsnav.Position = UDim2.new(0.0643218234, 0, 0.903220534, 0)
+devtoolsnav.Size = UDim2.new(0, 51, 0, 19)
+devtoolsnav.Font = Enum.Font.SourceSans
+devtoolsnav.Text = "DevTools"
+devtoolsnav.TextColor3 = Color3.new(1, 1, 1)
+devtoolsnav.TextScaled = true
+devtoolsnav.TextSize = 14
+devtoolsnav.TextWrapped = true
+devtoolsnav.ZIndex = 2
+devtoolsnav.MouseButton1Click:Connect(function()
+    local executor = Instance.new("Frame")
+    local closedevtools = Instance.new("TextButton")
+    local closeround = Instance.new("UICorner")
+    local scrollexec = Instance.new("ScrollingFrame")
+    local execbox = Instance.new("TextBox")
+    local execute = Instance.new("TextButton")
+
+    executor.Name = "executor"
+    executor.Parent = titanium
+    executor.Active = true
+    executor.BackgroundColor3 = Color3.new(0.258824, 0.258824, 0.258824)
+    executor.BorderSizePixel = 0
+    executor.Position = UDim2.new(0.0207652748, 0, 0.0424349457, 0)
+    executor.Size = UDim2.new(0, 338, 0, 322)
+    executor.Draggable = true
+
+    closedevtools.Name = "closedevtools"
+    closedevtools.Parent = executor
+    closedevtools.BackgroundColor3 = Color3.new(0.67451, 0, 0)
+    closedevtools.BorderSizePixel = 0
+    closedevtools.Position = UDim2.new(0.940462708, 0, 0.0137931034, 0)
+    closedevtools.Size = UDim2.new(0, 19, 0, 19)
+    closedevtools.Font = Enum.Font.GothamSemibold
+    closedevtools.Text = "X"
+    closedevtools.TextColor3 = Color3.new(1, 1, 1)
+    closedevtools.TextSize = 15
+    closedevtools.TextTransparency = 1
+    closedevtools.TextWrapped = true
+    closedevtools.MouseButton1Click:Connect(function()
+        executor:Destroy()
+    end)
+
+    closeround.Name = "closeround"
+    closeround.Parent = closedevtools
+    closeround.CornerRadius = UDim.new(0, 12)
+
+    scrollexec.Name = "scrollexec"
+    scrollexec.Parent = executor
+    scrollexec.Active = true
+    scrollexec.BackgroundColor3 = Color3.new(1, 1, 1)
+    scrollexec.BackgroundTransparency = 1
+    scrollexec.Position = UDim2.new(0, 0, 0.0931676999, 0)
+    scrollexec.Size = UDim2.new(0, 336, 0, 254)
+
+    execbox.Name = "execbox"
+    execbox.Parent = scrollexec
+    execbox.BackgroundColor3 = Color3.new(1, 1, 1)
+    execbox.BackgroundTransparency = 1
+    execbox.Size = UDim2.new(1, 0, 1, 0)
+    execbox.ClearTextOnFocus = false
+    execbox.Font = Enum.Font.Code
+    execbox.MultiLine = true
+    execbox.Text = "popup('hey')"
+    execbox.TextColor3 = Color3.new(1, 1, 1)
+    execbox.TextSize = 14
+    execbox.TextWrapped = true
+    execbox.TextXAlignment = Enum.TextXAlignment.Left
+    execbox.TextYAlignment = Enum.TextYAlignment.Top
+
+    execute.Name = "execute"
+    execute.Parent = executor
+    execute.BackgroundColor3 = Color3.new(0.282353, 0.282353, 0.282353)
+    execute.BorderSizePixel = 0
+    execute.Position = UDim2.new(0.2928994, 0, 0.879527569, 0)
+    execute.Size = UDim2.new(0, 139, 0, 38)
+    execute.Font = Enum.Font.SourceSans
+    execute.Text = "Execute"
+    execute.TextColor3 = Color3.new(1, 1, 1)
+    execute.TextScaled = true
+    execute.TextSize = 14
+    execute.TextWrapped = true
+    execute.MouseButton1Click:Connect(function()
+        local success, error = pcall(function()
+            loadstring(execbox.Text)()
+        end)
+
+        if not success then
+            popup("DevTools Error: "..tostring(error))
+        end
+    end)
+end)
+
+motd.Name = "motd"
+motd.Parent = menuhub
+motd.BackgroundColor3 = Color3.new(1, 1, 1)
+motd.BackgroundTransparency = 1
+motd.Position = UDim2.new(0.0694444478, 0, 0.600646555, 0)
+motd.Size = UDim2.new(0, 120, 0, 65)
+motd.Font = Enum.Font.Ubuntu
+motd.Text = "Getting motd"
+motd.TextColor3 = Color3.new(1, 1, 1)
+motd.TextSize = 11
+motd.TextWrapped = true
+motd.TextXAlignment = Enum.TextXAlignment.Left
+motd.TextYAlignment = Enum.TextYAlignment.Top
+motd.ZIndex = 2
+
 menutopbar.Name = "menutopbar"
 menutopbar.Parent = mainframe
 menutopbar.BackgroundColor3 = Color3.new(0.282353, 0.282353, 0.282353)
@@ -215,6 +444,9 @@ menutopbar.TextColor3 = Color3.new(1, 1, 1)
 menutopbar.TextScaled = true
 menutopbar.TextSize = 14
 menutopbar.TextWrapped = true
+menutopbar.MouseButton1Click:Connect(function()
+    menuhub.Visible = not menuhub.Visible
+end)
 
 title.Name = "title"
 title.Parent = mainframe
@@ -222,8 +454,8 @@ title.BackgroundColor3 = Color3.new(1, 0.666667, 0)
 title.BackgroundTransparency = 1
 title.Position = UDim2.new(0.350000024, 0, 0.0137931034, 0)
 title.Size = UDim2.new(0, 132, 0, 34)
-title.Font = Enum.Font.PermanentMarker
-title.Text = "titanium"
+title.Font = Enum.Font.SourceSans
+title.Text = "Titanium"
 title.TextColor3 = Color3.new(1, 1, 1)
 title.TextScaled = true
 title.TextSize = 14
@@ -255,21 +487,39 @@ scriptgo.BorderSizePixel = 0
 scriptgo.Position = UDim2.new(0.886363626, 0, 0.868965507, 0)
 scriptgo.Size = UDim2.new(0, 43, 0, 24)
 scriptgo.Font = Enum.Font.RobotoMono
-scriptgo.Text = "Go"
+scriptgo.Text = ">"
 scriptgo.TextColor3 = Color3.new(1, 1, 1)
 scriptgo.TextScaled = true
 scriptgo.TextSize = 14
 scriptgo.TextWrapped = true
 scriptgo.MouseButton1Click:Connect(function()
     local scripttext = customscript.Text
+    local scriptcontents
     customscript.Text = ""
     customscript.PlaceholderText = "Connecting"
     local didcon, errorcon = pcall(function()
-        loadstring(game:HttpGet("https://jaceg37.github.io/titanium/scripts/"..scripttext..".lua"))()
+        if syn then
+            local scriptload = syn.request({
+                Url = "https://pythonllab.github.io/titaniumhub/scripts/"..scripttext..".lua",
+                Method = "GET"
+            })
+            if not scriptload.Success then
+                error(tostring(scriptload.StatusCode))
+            end
+            
+            loadstring(scriptload.Body)()
+        elseif KRNL_LOADED then
+            request({
+                Url = url,
+                Body = newdata,
+                Method = "POST",
+                Headers = headers,
+            })
+        end
     end)
 
     if not didcon then
-        customscript.PlaceholderText = string.lower(tostring(errorcon))
+        customscript.PlaceholderText = tostring(errorcon)
         wait(2)
     end
     customscript.PlaceholderText = "Custom script"
@@ -321,7 +571,7 @@ unfinishedla.BackgroundTransparency = 1
 unfinishedla.Position = UDim2.new(0.0238095243, 0, 0.151685387, 0)
 unfinishedla.Size = UDim2.new(0, 410, 0, 100)
 unfinishedla.Font = Enum.Font.Nunito
-unfinishedla.Text = "This box is intended for automatically loading scripts from our servers. That functionality is still in development. However, you can type in the script name or ID and the script will load here. More information once we actually implement this feature.\nClick Info to find scripts."
+unfinishedla.Text = "Titanium is in development. In the future scripts will load here but I have to complete other features first.\nClick Info to find scripts."
 unfinishedla.TextColor3 = Color3.new(1, 1, 1)
 unfinishedla.TextScaled = true
 unfinishedla.TextSize = 14
@@ -396,6 +646,7 @@ function createBrowser(geturl)
     contentsweb.TextWrapped = true
     contentsweb.TextEditable = false
     contentsweb.ClearTextOnFocus = false
+    contentsweb.Text = "If this takes a long time and you are 100% sure that your connection speed is fast, it may be because GitHub is down, if not, then click Refresh and that may solve the problem."
 
     webstatus.Name = "webstatus"
     webstatus.Parent = webbrowser
@@ -526,7 +777,7 @@ function createContents(title, string)
     titlecontents.TextEditable = false
 
     closecontents.Name = "closebrowser"
-    closecontents.Parent = webbrowser
+    closecontents.Parent = contentviewer
     closecontents.BackgroundColor3 = Color3.new(0.258824, 0.258824, 0.258824)
     closecontents.BorderSizePixel = 0
     closecontents.Position = UDim2.new(0.908284009, 0, 0, 0)
@@ -538,10 +789,18 @@ function createContents(title, string)
     closecontents.TextSize = 14
     closecontents.TextWrapped = true
     closecontents.MouseButton1Click:Connect(function()
-        webbrowser:Destroy()
+        contentviewer:Destroy()
     end)
+end
 
-    contents.Text = game:HttpGet(webstatus.Text)
+if syn then
+    local motdcontents = syn.request({
+        Url = "https://pythonllab.github.io/titaniumhub/motd.txt",
+        Method = "GET"
+    })
+    motd.Text = motdcontents.Body
+else
+    motd.Text = "Not Synapse X"
 end
 
 if not syn then

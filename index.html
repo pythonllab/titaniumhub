@@ -5,6 +5,55 @@
     <meta http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Titanium</title>
+
+    <script>
+        function checkBrowser() {
+          
+            // Get the user-agent string
+            let userAgentString = 
+                navigator.userAgent;
+          
+            // Detect Chrome
+            let chromeAgent = 
+                userAgentString.indexOf("Chrome") > -1;
+          
+            // Detect Internet Explorer
+            let IExplorerAgent = 
+                userAgentString.indexOf("MSIE") > -1 || 
+                userAgentString.indexOf("rv:") > -1;
+          
+            // Detect Firefox
+            let firefoxAgent = 
+                userAgentString.indexOf("Firefox") > -1;
+          
+            // Detect Safari
+            let safariAgent = 
+                userAgentString.indexOf("Safari") > -1;
+                  
+            // Discard Safari since it also matches Chrome
+            if ((chromeAgent) && (safariAgent)) 
+                safariAgent = false;
+          
+            // Detect Opera
+            let operaAgent = 
+                userAgentString.indexOf("OP") > -1;
+                  
+            // Discard Chrome since it also matches Opera     
+            if ((chromeAgent) && (operaAgent)) 
+                chromeAgent = false;
+          
+            document.querySelector(".output-safari").textContent
+                        = safariAgent;
+            document.querySelector(".output-chrome").textContent
+                        = chromeAgent;
+            document.querySelector(".output-ie").textContent
+                        = IExplorerAgent;
+            document.querySelector(".output-opera").textContent
+                        = operaAgent;
+            document.querySelector(".output-firefox").textContent
+                        = firefoxAgent;
+        }
+    </script>
 </head>
 <body>
     <center>
@@ -16,7 +65,14 @@
             <details style="font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">
                 <samp>loadstring(game:HttpGet("https://jaceg37.github.io/titanium/titanium.luaurelease"))()</samp>
                 <summary>
-                    Script
+                    <b>Script</b>
+                </summary>
+            </details>
+            
+            <details style="font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">
+                nothing here yet
+                <summary>
+                    Showcases
                 </summary>
             </details>
 
@@ -40,6 +96,9 @@
         
         <h5 style="font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Script <abbr title="Titanium Script Hub">THS</abbr> and website created and designed by pythonlab</h5>
         <h4><samp>2022</samp></h4>
+        <button onclick="javascript:window.print();return false;">
+            print
+        </button>
     </center>
 </body>
 </html>
